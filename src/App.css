@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  padding: 0 60px;
 }
 
 .App-logo {
@@ -35,4 +36,40 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.header {
+  font-size: 5rem;
+  color: red;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.add-input-container {
+  width: full;
+  height: 20px;
+  padding: 0 60px;
+}
+
+.add-input {
+  margin-top: 20px;
+  width: 80%;
+  height: 100%;
+}
+
+.button {
+  background-color: white;
+  border-radius: 10px;
+}
+
+.green-background {
+  background-color: green;
+}
+
+.todo-list-container {
+  height: full;
+  padding-top: 50px;
 }

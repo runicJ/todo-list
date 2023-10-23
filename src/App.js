@@ -91,32 +91,37 @@ function App() {
           <option value="content">가나다순</option>
         </select>
       </div>
-      <div>
+      {/*
+      SPA(Single Page Application), CSR(client Side Rendering  <-> SSR, Server side rendering)
+      client가 dom그리기를 제어한다.
+      */}
+      <form
+        onSubmit={(e) => {
+          // form은 기본적으로 새로고침을 trigger, why? 새로운 html파일을 내려받아야하니까
+          e.preventDefault();
+          if (!inputValue) return;
+          const newTodo = {
+            id: uuid(),
+            content: inputValue,
+            isDone: false,
+            createdAt: Date.now(),
+          };
+          setTodos([...todos, newTodo]);
+          setInputValue("");
+        }}
+      >
         {/* (인자) => {어떤 행동} */}
         <input
-          // Input의 제어권을 React(JS)가 가지고 있을 수 있게, state값을 주입했다. 
+          // Input의 제어권을 React(JS)가 가지고 있을 수 있게, state값을 주입했다.
           value={inputValue}
-          // Input의 값이 변하는 이벤트가 발생했을 때, 제어권ㅇ르 가진 React(JS)의 state값을 변경한다.
+          // Input의 값이 변하는 이벤트가 발생했을 때, 제어권을 가진 React(JS)의 state값을 변경한다.
           onChange={(e) => {
             setInputValue(e.target.value);
           }}
+          disabled={isUpdateMode}
         />
-        <button
-          onClick={() => {
-            // spread 연산자
-            const newTodo = {
-              id: uuid(),
-              content: inputValue,
-              isDone: false,
-              createAt: Date.now(),
-            };
-            setTodos([...todos, newTodo]); // '...' 기존 값을 그대로 이용할거야
-            setInputValue("");
-          }}
-        >
-          ADD
-        </button>
-      </div>
+        <button disabled={!inputValue || isUpdateMode}>{"ADD"}</button>
+      </form>
       <div>
         {/* DRY Don't Repeat Yourself */}
         {/* [할일 1, 할일 2, 할일 3]  */}

@@ -33,7 +33,11 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [sort, setSort] = useState("");
   const [filter, setFilter] = useState("");
-  const [editTodoId, setEditTodoId] = useState(null);
+
+  const [updateValue, setUpdateValue] = useState("");
+  const [updateTargetIndex, setUpdateTargetIndex] = useState(-1);
+  /** computedValue */
+  const isUpdateMode = updateTargetIndex >= 0;
 
   const computedTodos = todos
     .filter((todo) => {
@@ -87,7 +91,6 @@ function App() {
           <option value="content">가나다순</option>
         </select>
       </div>
-
       <div>
         {/* (인자) => {어떤 행동} */}
         <input
@@ -118,7 +121,7 @@ function App() {
         {/* DRY Don't Repeat Yourself */}
         {/* [할일 1, 할일 2, 할일 3]  */}
         {computedTodos.map((todo, index) => (
-          <div key={todo.id} onDoubleClick={() => setEditTodoId(todo.id)}>
+          <div key={todo.id}>
             <input
               type="checkbox"
               checked={todo.isDone}
@@ -139,39 +142,48 @@ function App() {
                 setTodos(nextTodos);
               }}
             />
-            {/* content 수정 모드인 경우 */}
-            {editTodoId === todo.id ? (
+            {updateTargetIndex === index ? (
               <input
-                value={todo.content}
-                onChange={(e) => {
-                  // content 업데이트
-                  const nextTodos = todos.map((t) =>
-                    t.id === todo.id ? { ...t, content: e.target.value } : t
-                  );
-                  setTodos(nextTodos);
-                }}
-                onBlur={() => setEditTodoId(null)} // 입력 필드에서 벗어나면 수정 모드 종료
+                value={updateValue}
+                onChange={(e) => setUpdateValue(e.target.value)}
               />
             ) : (
-              <span style={{ textDecoration: todo.isDone ? "line-through" : "" }}>
+              <span
+                style={{ textDecoration: todo.isDone ? "line-through" : "" }}
+              >
                 {todo.content}
-              </span>)}
+              </span>
+            )}
             <button
               onClick={() => {
                 const nextTodos = todos.filter((_, idx) => idx !== index);
                 setTodos(nextTodos);
               }}
+              disabled={isUpdateMode}
             >
               DEL
             </button>
-            {/* <button
+            <button
               onClick={() => {
-                const nextTodos = todos.filter((todo) => todo.id !== todo.id);
-                setTodos(nextTodos);
+                if (isUpdateMode) {
+                  const nextTodos = todos.map((todo, index) =>
+                    index === updateTargetIndex
+                      ? { ...todo, content: updateValue }
+                      : todo
+                  );
+                  setTodos(nextTodos);
+                  setUpdateValue("");
+                  setUpdateTargetIndex(-1);
+                  return;
+                }
+
+                setUpdateTargetIndex(index);
+                setUpdateValue(todo.content);
               }}
-              >
-                DEL
-              </button> */}
+              disabled={isUpdateMode && index !== updateTargetIndex}
+            >
+              UPDATE
+            </button>
           </div>
         ))}
       </div>

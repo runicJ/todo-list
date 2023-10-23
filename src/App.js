@@ -33,18 +33,19 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [sort, setSort] = useState("");
   const [filter, setFilter] = useState("");
+  const [editTodoId, setEditTodoId] = useState(null);
 
   const computedTodos = todos
-  .filter((todo) => {
-    if (filter === 'ALL') return true;
-    if (filter === 'DONE') return todo.isDone === true;
-    if (filter === "NOT DONE") return todo.isDone === false; // !todo.isDone
-  })
-  .sort((a, b) => {
-    if (sort === 'none') return 0; // 0이 의미하는 것 바꾸지 않겠다
-    if (sort === 'createAt') return b.createAt - a.createAt;
-    if (sort === 'content') return a.content.localeCompare(b.content);
-  });
+    .filter((todo) => {
+      if (filter === 'ALL') return true;
+      if (filter === 'DONE') return todo.isDone === true;
+      if (filter === "NOT DONE") return todo.isDone === false; // !todo.isDone
+    })
+    .sort((a, b) => {
+      if (sort === 'none') return 0; // 0이 의미하는 것 바꾸지 않겠다
+      if (sort === 'createAt') return b.createAt - a.createAt;
+      if (sort === 'content') return a.content.localeCompare(b.content);
+    });
 
   // console.log({ sort });
   // state 변화하는 값, 임시적인 값
@@ -61,20 +62,20 @@ function App() {
           type="radio"
           value="ALL"
           checked={filter === "ALL"}
-          onChange={(e) => setFilter(e.target.value)} 
+          onChange={(e) => setFilter(e.target.value)}
         />
         <label>전체</label>
-        <input 
+        <input
           type="radio"
           value="DONE"
           checked={filter === "DONE"}
-          onChange={(e) => setFilter(e.target.value)} 
+          onChange={(e) => setFilter(e.target.value)}
         />
         <label>완료</label>
         <input type="radio"
           value="NOT DONE"
-          checked={filter === "DNOT DONEONE"}
-          onChange={(e) => setFilter(e.target.value)} 
+          checked={filter === "NOT DONE"}
+          onChange={(e) => setFilter(e.target.value)}
         />
         <label>미완료</label>
       </div>
@@ -117,7 +118,7 @@ function App() {
         {/* DRY Don't Repeat Yourself */}
         {/* [할일 1, 할일 2, 할일 3]  */}
         {computedTodos.map((todo, index) => (
-          <div key={todo.id}>
+          <div key={todo.id} onDoubleClick={() => setEditTodoId(todo.id)}>
             <input
               type="checkbox"
               checked={todo.isDone}
@@ -138,9 +139,23 @@ function App() {
                 setTodos(nextTodos);
               }}
             />
-            <span style={{ textDecoration: todo.isDone ? "line-through" : "" }}>
-              {todo.content}
-            </span>
+            {/* content 수정 모드인 경우 */}
+            {editTodoId === todo.id ? (
+              <input
+                value={todo.content}
+                onChange={(e) => {
+                  // content 업데이트
+                  const nextTodos = todos.map((t) =>
+                    t.id === todo.id ? { ...t, content: e.target.value } : t
+                  );
+                  setTodos(nextTodos);
+                }}
+                onBlur={() => setEditTodoId(null)} // 입력 필드에서 벗어나면 수정 모드 종료
+              />
+            ) : (
+              <span style={{ textDecoration: todo.isDone ? "line-through" : "" }}>
+                {todo.content}
+              </span>)}
             <button
               onClick={() => {
                 const nextTodos = todos.filter((_, idx) => idx !== index);
@@ -149,6 +164,14 @@ function App() {
             >
               DEL
             </button>
+            {/* <button
+              onClick={() => {
+                const nextTodos = todos.filter((todo) => todo.id !== todo.id);
+                setTodos(nextTodos);
+              }}
+              >
+                DEL
+              </button> */}
           </div>
         ))}
       </div>

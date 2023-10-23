@@ -133,6 +133,7 @@ function App() {
       <div className="todo-list-container">
         {computedTodos.map((todo) => (
           <TodoItem
+            className="todo-list-item"
             key={todo.id}
             todo={todo}
             updateTargetId={updateTargetId}

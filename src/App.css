@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  padding: 0 60px;
+  padding: 0 70px;
 }
 
 .App-logo {
@@ -12,6 +12,10 @@
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+
+body {
+  background-color: mistyrose;
 }
 
 .App-header {
@@ -40,7 +44,9 @@
 
 .header {
   font-size: 5rem;
-  color: red;
+  color: indigo;
+  font-family:cursive, sans-serif;
+  text-shadow: 3px 2px 4px salmon;
 }
 
 .filter-container {
@@ -49,15 +55,33 @@
 }
 
 .add-input-container {
+  margin-top: 20px;
   width: full;
   height: 20px;
-  padding: 0 60px;
+  padding: 10px 60px;
+
+  transition: all ease 1s;
+  & > .button {
+    border: none;
+    margin-left: 20px;
+    color: blue;
+
+    &:disabled {
+      color: gray;
+    }
+  }
 }
 
 .add-input {
-  margin-top: 20px;
+  /* margin-top: 20px; */
   width: 80%;
   height: 100%;
+  border-radius: 8px;
+  padding: 5px;
+  background-color: mintcream;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-right: 5px;
 }
 
 .button {
@@ -70,6 +94,21 @@
 }
 
 .todo-list-container {
-  height: full;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px; /* 각 항목 간의 간격을 조절합니다 */
   padding-top: 50px;
+}
+
+.todo-list-item {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 70%;
+  max-width: 400px;
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 20px; /* 각 Todo 항목 간의 간격을 조절합니다 */
 }
